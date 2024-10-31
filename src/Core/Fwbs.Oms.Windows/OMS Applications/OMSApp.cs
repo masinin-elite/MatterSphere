@@ -2080,20 +2080,8 @@ namespace FWBS.OMS.UI.Windows
         /// Performs an internal save routine which will save a document quickly without any OMS intervention.
         /// </summary>
         /// <param name="obj">The document object.</param>
-        [Obsolete("Please override InternalSave(obj, bool) instead. Thank you")]
-        protected virtual void InternalSave(object obj)
-        {
-        }
-
-        /// <summary>
-        /// Performs an internal save routine which will save a document quickly without any OMS intervention.
-        /// </summary>
-        /// <param name="obj">The document object.</param>
         /// <param name="createFileIfNew">Does not save a new file as a temp but just flags the document as saved.</param>
-        protected virtual void InternalSave(object obj, bool createFileIfNew)
-        {
-            InternalSave(obj);
-        }
+        protected virtual void InternalSave(object obj, bool createFileIfNew) { }
 
         /// <summary>
         /// Allows the OMS application to set default values for a storage item.

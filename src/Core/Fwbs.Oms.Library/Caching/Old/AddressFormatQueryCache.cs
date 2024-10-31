@@ -4,7 +4,6 @@ using FWBS.Common;
 
 namespace FWBS.OMS.Caching
 {
-    [Obsolete("Use the one in Queries")]
     internal sealed class AddressFormatQueryCache : BaseQueryCache
     {
         #region IQueryCache Members

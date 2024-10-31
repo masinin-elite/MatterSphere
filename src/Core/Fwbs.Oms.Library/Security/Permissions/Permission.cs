@@ -17,7 +17,7 @@ namespace FWBS.OMS.Security.Permissions
 
         }
 
-        public Permission(string permissionType) : this(Session.OMS, permissionType)
+        public Permission(string permissionType) : this(Session.CurrentSession, permissionType)
         {
         }
 

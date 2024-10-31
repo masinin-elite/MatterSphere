@@ -37,22 +37,17 @@ namespace FWBS.OMS.UI.Windows
 		#endregion
 
 		#region Contructors
-        public Accelerators(IContainer container) : this()
+        public Accelerators(IContainer container)
         {
+            _timer = new System.Windows.Forms.Timer
+            {
+                Enabled = false,
+                Interval = 1000
+            };
+            _timer.Tick += new EventHandler(Tick);
+            _toprocess = new ArrayList();
             container.Add(this);
         }
-		/// <summary>
-		/// Contructor the Component
-		/// </summary>
-        [Obsolete("Please use Accelerators(IContainer container) contructor to avoid memory leaks")]
-        public Accelerators()
-		{
-			_timer = new System.Windows.Forms.Timer();
-			_timer.Enabled = false;
-			_timer.Interval = 1000;
-			_timer.Tick +=new EventHandler(Tick);
-			_toprocess = new ArrayList();
-		}
 		#endregion
 
 		#region Properties
@@ -167,7 +162,7 @@ namespace FWBS.OMS.UI.Windows
             if (frm == null) return;
 
 			accelerators = ": ";
-			if (Session.OMS != null)
+			if (Session.CurrentSession != null)
 			{
 				foreach (System.Windows.Forms.Control ctrl in frm.Controls)
 				{
@@ -232,7 +227,7 @@ namespace FWBS.OMS.UI.Windows
 
             try
 			{
-				if (Session.OMS != null)
+				if (Session.CurrentSession != null)
 				{
 					if (ctrl.Text != "" && ctrl.Visible)
 					{

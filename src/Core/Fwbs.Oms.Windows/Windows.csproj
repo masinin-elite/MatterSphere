@@ -1193,9 +1193,6 @@
     <Compile Include="EnquiryControls\eLastEmailsForAssociates.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="frmFullScreen.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="OMS Applications\BulkDocumentProcessArgs.cs" />
     <Compile Include="OMS Applications\DocSaveStatus.cs" />
     <Compile Include="OMS Applications\OpenSettings.cs" />

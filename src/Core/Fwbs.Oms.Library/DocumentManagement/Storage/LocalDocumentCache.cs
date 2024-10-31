@@ -68,19 +68,6 @@ namespace FWBS.OMS.DocumentManagement.Storage
 
         #endregion
 
-        #region Static
-
-        [Obsolete("Please use StorageManager.CurrentManager.LocalDocuments")]
-        public static ILocalDocumentCache Cache
-        {
-            get
-            {
-                return StorageManager.CurrentManager.LocalDocuments;
-            }
-        }
-
-        #endregion
-
         #region Properties
 
         public int LimitSize

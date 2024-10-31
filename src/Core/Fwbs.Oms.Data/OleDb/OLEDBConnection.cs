@@ -576,96 +576,6 @@ namespace FWBS.OMS.Data
             }
         }
 
-        /// <summary>
-        /// Updates a singular row, this method should deal with getting back a new identity column
-        /// value if the row was added.
-        /// </summary>
-        /// <param name="row">Row object by reference.</param>
-        /// <param name="selectStatement">Select statement used by a command builder.</param>
-        /// <param name="whereStatement">The where clause of the select statement.</param>
-        /// <param name="identityColumn">The identity column name for addin new rows.</param>
-        /// <param name="tableName">The table name of the returned table if the record needs refreshed.</param>
-        /// <returns>A data table of refreshed data information with a new identity column.</returns>
-        [Obsolete("Please use the newer Update methods", false)]
-        protected override DataTable InternalUpdate(DataRow row, string selectStatement, string whereStatement, string identityColumn, string tableName)
-        {
-            try
-            {
-                LockExecution();
-
-                OleDbDataAdapter adpt = new OleDbDataAdapter(selectStatement + " " + whereStatement, (OleDbConnection)_cnn);
-
-                try
-                {
-
-                    OleDbCommandBuilder cmdb = new OleDbCommandBuilder(adpt);
-
-                    Trace.WriteLineIf(Global.LogSwitch.TraceInfo, "Update Row SELECT: " + selectStatement, Global.LogSwitch.DisplayName);
-                    Trace.WriteLineIf(Global.LogSwitch.TraceInfo, "Update Row INSERT: " + cmdb.GetInsertCommand().CommandText, Global.LogSwitch.DisplayName);
-                    Trace.WriteLineIf(Global.LogSwitch.TraceInfo, "Update Row UPDATE: " + cmdb.GetUpdateCommand().CommandText, Global.LogSwitch.DisplayName);
-                    Trace.WriteLineIf(Global.LogSwitch.TraceInfo, "Update Row DELETE: " + cmdb.GetDeleteCommand().CommandText, Global.LogSwitch.DisplayName);
-
-
-                    int ret = 0;
-
-                    string selectIdentity = "";
-
-                    if (row.RowState == DataRowState.Added)
-                    {
-
-                        if ((identityColumn != "") && row.Table.Columns.Contains(identityColumn))
-                            selectIdentity = selectStatement + " where " + identityColumn + " = @@IDENTITY";
-
-                    }
-
-                    ret = adpt.Update(new DataRow[1] { row });
-                    try
-                    {
-                        row.AcceptChanges();
-                    }
-                    catch { }
-
-                    Trace.WriteLineIf(Global.LogSwitch.TraceVerbose, "Successfully Updated Dataset");
-
-                    if (ret > 0 && selectIdentity != "")
-                    {
-                        DataTable dt = (DataTable)ExecuteSQLTable(selectIdentity, tableName, new IDataParameter[0]);
-                        return dt;
-                    }
-                    else
-                        return null;
-
-                }
-                catch (DBConcurrencyException dbcex)
-                {
-                    Debug.Assert(!Global.AllowAssertions, String.Format("Concurrency error occurs using sql '{0}' {1} {2}", adpt.SelectCommand.CommandText, Environment.NewLine, dbcex));
-
-
-                    DataTable refresh = new DataTable(row.Table.TableName);
-                    adpt.Fill(refresh);
-
-                    if (row.Table.DataSet == null)
-                    {
-                        DataSet olddata = new DataSet();
-                        olddata.Tables.Add(row.Table);
-                        olddata.Merge(refresh, true, MissingSchemaAction.Ignore);
-                        olddata.Tables.Remove(row.Table);
-                    }
-                    else
-                        row.Table.DataSet.Merge(refresh, true, MissingSchemaAction.Ignore);
-
-                    adpt.Update(new DataRow[1] { row });
-                    row.AcceptChanges();
-                    Trace.WriteLineIf(Global.LogSwitch.TraceVerbose, "Successfully Updated Dataset after concurrency issues.");
-                    return null;
-                }
-            }
-            finally
-            {
-                UnLockExecution();
-            }
-        }
-
         #endregion
 
         #region New Update Methods
@@ -751,7 +661,6 @@ namespace FWBS.OMS.Data
         }
 
         #endregion
-
 
         #region Properties
 
@@ -951,9 +860,6 @@ namespace FWBS.OMS.Data
         }
 
         #endregion
-
-
-
 
     }
 }

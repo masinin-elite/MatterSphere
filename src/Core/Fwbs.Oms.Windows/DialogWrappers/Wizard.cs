@@ -1153,7 +1153,7 @@ namespace FWBS.OMS.UI.Windows
             /// </summary>
             public static bool SaveSystemSettings(IWin32Window owner)
             {
-                return (GetWizard(owner, Session.CurrentSession.DefaultSystemForm(SystemForms.SystemEdit), null, Session.OMS, null) != null);
+                return (GetWizard(owner, Session.CurrentSession.DefaultSystemForm(SystemForms.SystemEdit), null, Session.CurrentSession, null) != null);
             }
 
 

@@ -10,8 +10,7 @@ namespace FWBS.OMS
 		#region Fields
 
 		private string _code = "";
-		private Branch _branch = Session.OMS;
-	
+		private Branch _branch = Session.CurrentSession;
 
 		#endregion
 
@@ -50,6 +49,4 @@ namespace FWBS.OMS
 
 		#endregion
 	}
-
-
 }

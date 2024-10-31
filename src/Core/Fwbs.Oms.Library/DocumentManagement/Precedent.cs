@@ -2225,7 +2225,7 @@ namespace FWBS.OMS
 			if (assoc != null) lang = assoc.OMSFile.PreferedLanguage;
 
 			PromptEventArgs e = new PromptEventArgs(PromptType.Search,FWBS.OMS.Session.CurrentSession.DefaultSystemSearchList(FWBS.OMS.SystemSearchLists.PrecedentFilter), new object[2]{title, lang}, "");
-			Session.CurrentSession.OnPrompt(Session.OMS, e);
+			Session.CurrentSession.OnPrompt(Session.CurrentSession, e);
 			if (e.Result != null)
 			{
 				long id = Common.ConvertDef.ToInt64(e.Result, -1);

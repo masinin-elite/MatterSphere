@@ -386,11 +386,6 @@ namespace FWBS.OMS.UI.Windows
         {
             container.Add(this);
         }
-		
-        [Obsolete("Please use ucFormStorage(IContainer container) contructor to avoid memory leaks")]
-        public ucFormStorage()
-		{
-		}
 
         protected override void Dispose(bool disposing)
         {

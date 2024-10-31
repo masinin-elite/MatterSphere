@@ -172,24 +172,7 @@ namespace FWBS.OMS.UI.Windows
         }
 
         #region FolderForms
-        [Obsolete("Please use GetFolderFormsIcons(IconSize.Size16)")]
-        public static ImageList imgFolderForms16
-        {
-            get
-            {
-                return GetFolderFormsIcons(IconSize.Size16);
-            }
-        }
-
-        [Obsolete("Please use GetFolderFormsIcons(IconSize.Size32)")]
-        public static ImageList imgFolderForms32
-        {
-            get
-            {
-                return GetFolderFormsIcons(IconSize.Size32);
-            }
-        }
-
+        
         private const int folderFormsLength = 2;
         private const string folderFormsPrefix = "FolderForms";
         private const string folderFormsResourceLocation = "FWBS.OMS.UI.Resources.FolderForms";
@@ -201,16 +184,6 @@ namespace FWBS.OMS.UI.Windows
         #endregion
 
         #region RichText Icons
-
-        [Obsolete("Please Use GetRichTextIcons(IconSize.Size16)")]
-        public static ImageList RichText
-        {
-            get
-            {
-                return GetRichTextIcons(IconSize.Size16);
-
-            }
-        }
 
         private const int richTextLength = 6;
         private const string richTextPrefix = "RichText";
@@ -252,15 +225,6 @@ namespace FWBS.OMS.UI.Windows
         #endregion
 
         #region Cool Buttons
-
-        [Obsolete("Please use the GetCoolButtons24() method")]
-        public static ImageList CoolButtons24
-        {
-            get
-            {
-                return FWBS.OMS.UI.Windows.Images.CloneList(GetCoolButtons24(), "CoolButtons24");
-            }
-        }
 
         private const int coolButtonsCount = 117;
         private const string coolButtonsPrefix = "Cool Buttons";

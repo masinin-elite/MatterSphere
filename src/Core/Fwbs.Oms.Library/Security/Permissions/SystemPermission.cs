@@ -3,12 +3,12 @@ namespace FWBS.OMS.Security.Permissions
     public sealed class SystemPermission : Permission
     {
         public SystemPermission(string permissionType)
-            : base(Session.OMS, permissionType)
+            : base(Session.CurrentSession, permissionType)
         {
         }
 
          public SystemPermission(StandardPermissionType permissionType)
-            : base(Session.OMS, permissionType)
+            : base(Session.CurrentSession, permissionType)
         {
         }
 

@@ -1,17 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading;
 using FWBS.Common;
+using FWBS.OMS.Data;
 using FWBS.OMS.EnquiryEngine;
 using FWBS.OMS.Interfaces;
 
 namespace FWBS.OMS
 {
-    using System.Collections.Generic;
-    using FWBS.OMS.Data;
-
-
     /// <summary>
     /// 1000 Holds a user definition.  This user object can be used with the enquiry engine.
     /// </summary>
@@ -152,54 +150,6 @@ namespace FWBS.OMS
 
             this.OnExtLoaded();
 		}
-
-		/// <summary>
-		///	Creates a new user based on the login type and userName that is to be used.
-		/// This contructor is used by the Session login method to create the currently logged in user.
-		/// The login type tells the user object what unique identifer to use.
-		/// </summary>
-		/// <param name="loginType">Login type SQLm OMS or NT, whatever is required.</param>
-		/// <param name="userName">User name to compare.</param>
-		[Obsolete("This constructor will no longer be needed from Davenport onwards")]
-		internal User (string loginType, string userName)
-		{
-			string sqlwhere = "";
-			
-			if (userName == null || userName.Trim() == String.Empty)
-				throw new Security.InvalidOMSUserException("?");
-
-			switch (loginType)
-			{
-				case "OMS":	//Logs into OMS validating with dbUser and using a common SQL server login.
-					sqlwhere += " where usrInits = '" + SQLRoutines.RemoveRubbish(userName) + "' or usrAlias = '" + SQLRoutines.RemoveRubbish(userName) + "'";
-					break;
-				case "SQL":  //Actual user name and password validates the user as a SQL server login.
-					sqlwhere += " where usrSQLID = '" + SQLRoutines.RemoveRubbish(userName) + "'";
-					break;
-				case "AAD":
-				case "NT":	//Uses NT to authenticate SQL server login then matches up with a OMS user.
-					string ntUser = Environment.UserName;
-					if (Session.CurrentSession.UIType == UIClientType.Web)
-						ntUser = userName;
-					sqlwhere += " where usrADID = system_user";
-					break;
-				case "ADID":	//Uses NT to authenticate SQL server login then matches up with a OMS user.
-					sqlwhere += " where usrADID = '" + SQLRoutines.RemoveRubbish(userName) + "'";
-					break;
-				default:
-					goto case "OMS";
-			}
-			_user = Session.CurrentSession.Connection.ExecuteSQLTable(Sql + sqlwhere, Table, new IDataParameter[0]);
-			if ((_user == null) || (_user.Rows.Count == 0)) 
-				throw new Security.InvalidOMSUserException(userName);
-
-
-			BuildXML();
-
-			if (this.GetType() == typeof(User))
-				Session.CurrentSession.CurrentUsers.Add(ID.ToString(), this);
-		}
-
 
 		/// <summary>
 		/// Fetches an instance of the underlying data of the user.
@@ -1686,49 +1636,6 @@ namespace FWBS.OMS
             }
         }
 
-		/// <summary>
-		/// Gets or Sets a flag that indicates whether the user has markup automatically displayed
-		/// in a word document when opening an already saved one.
-		/// </summary>
-		[EnquiryUsage(false)]
-		[System.ComponentModel.Browsable(false)]
-		[LocCategory("OMS")]
-		[Obsolete("Track change options no longer controlled by 3E MatterSphere", false)]
-		public bool ShowDocumentMarkup
-		{
-			get
-			{
-				return ConvertDef.ToBoolean(GetXmlProperty("usrShowDocumentMarkup", false), false);
-			}
-			set
-			{
-				SetXmlProperty("usrShowDocumentMarkup", value);
-			}
-		}
-
-		[EnquiryUsage(false)]
-		[System.ComponentModel.Browsable(false)]
-		[Obsolete("Track change options no longer controlled by 3E MatterSphere", false)]
-		[LocCategory("OMS")]
-		public TriState EnableTrackChanges
-		{
-			get
-			{
-				try
-				{
-					return (TriState)FWBS.Common.ConvertDef.ToEnum(GetXmlProperty("usrEnableTrackChanges", ""), TriState.Null);
-				}
-				catch
-				{
-					return TriState.Null;
-				}
-			}
-			set
-			{
-				SetXmlProperty("usrEnableTrackChanges", value);
-			}
-		}
-
 		[EnquiryUsage(true)]
 		[LocCategory("OMS")]
 		public TriState EnableTrackChangesWarning
@@ -2925,18 +2832,16 @@ namespace FWBS.OMS
 		/// </summary>
 		static public User GetUserByADName(string userName)
 		{
-			userName = userName ?? String.Empty;
-
+			userName = userName ?? string.Empty;
 
 			User cu = null;
 
-			if (Session.CurrentSession.CurrentUser.ActiveDirectoryID.ToUpperInvariant() == userName.ToUpperInvariant())
+			if (string.Equals(Session.CurrentSession.CurrentUser.ActiveDirectoryID, userName, StringComparison.InvariantCultureIgnoreCase))
 				cu = Session.CurrentSession.CurrentUser;
 			else
 			{
 				foreach (User u in Session.CurrentSession.CurrentUsers.Values)
 				{
-
 					if (u.ActiveDirectoryID.ToUpperInvariant() == userName.ToUpperInvariant())
 					{
 						cu = u;
@@ -2947,18 +2852,17 @@ namespace FWBS.OMS
 
 			if (cu == null)
 			{
-				cu = new User("ADID", userName);
+				cu = GetUser("ADID", userName);
 			}
 
 			return cu;
-			
 		}
 			
 		/// <summary>
 		/// Returns the users full name based on a specified user id.
 		/// </summary>
 		/// <param name="usrID">Specified user id.</param>
-        /// <param name="defaultValue"></param>
+		/// <param name="defaultValue"></param>
 		/// <returns>Users full name.</returns>
 		static public string GetUserFullName(int usrID, string defaultValue)
 		{
@@ -2976,12 +2880,12 @@ namespace FWBS.OMS
 		{
 			Session.CurrentSession.CheckLoggedIn();
 
-			if (String.IsNullOrEmpty(initials))
+			if (string.IsNullOrEmpty(initials))
 				throw new ArgumentNullException("initials");
 
 			User cu = null;
 			
-			if (Session.CurrentSession.CurrentUser.Initials.ToUpperInvariant() == initials.ToUpperInvariant())
+			if (string.Equals(Session.CurrentSession.CurrentUser.Initials, initials, StringComparison.InvariantCultureIgnoreCase))
 				cu = Session.CurrentSession.CurrentUser;
 			else
 			{
@@ -2997,10 +2901,27 @@ namespace FWBS.OMS
 
 			if (cu == null)
 			{
-				cu = new User("OMS", initials);
-			}
+				cu = GetUser("OMS", initials);
+ 			}
 
 			return cu;
+		}
+
+		static public User GetUser(string logintype, string username)
+		{
+			User result;
+			var connection = Session.CurrentSession.Connection;
+			var pars = new System.Collections.Generic.List<IDataParameter>
+				{
+					connection.CreateParameter("logintype", logintype),
+					connection.CreateParameter("USERNAME", username)
+				};
+			using (DataSet ds = connection.ExecuteProcedureDataSet("sprLogin", new string[] { "USER", "TERMINAL", "PRINTER", "FEEUSER", "FEEEARNER", "FAVOURITES" }, pars.ToArray()))
+			{
+				result = new User(ds.Tables["USER"], username);
+			}
+
+			return result;
 		}
 
 		static public string GetUserFullName(int usrID)
@@ -3013,7 +2934,7 @@ namespace FWBS.OMS
 		/// <summary>
 		/// Authenticates a user with the specified user initals and password.
 		/// If correct then the user object is returned.
-        /// </summary>
+		/// </summary>
 		static public User AuthenticateUser(string userName, string password)
 		{
 			User usr = GetUser(userName);

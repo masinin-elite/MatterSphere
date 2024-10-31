@@ -1,8 +1,5 @@
-﻿using FWBS.Common;
-using FWBS.OMS.EnquiryEngine;
-using FWBS.OMS.Interfaces;
+﻿using FWBS.OMS.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -32,8 +29,8 @@ namespace FWBS.OMS
                 {
                     if (_data.Rows[0]["cdNotes"] != DBNull.Value)
                     {
-                        powerroles = Encryption.Decrypt(Convert.ToString(_data.Rows[0]["cdHelp"]));
-                        powermenuitems = Encryption.Decrypt(Convert.ToString(_data.Rows[0]["cdDesc"]));
+                        powerroles = FWBS.Common.Security.Cryptography.Encryption.Decrypt(Convert.ToString(_data.Rows[0]["cdHelp"]));
+                        powermenuitems = FWBS.Common.Security.Cryptography.Encryption.Decrypt(Convert.ToString(_data.Rows[0]["cdDesc"]));
                         powerroles = powerroles.Replace(",", ";");
                         powermenuitems = powermenuitems.Replace(",", ";");
                     }

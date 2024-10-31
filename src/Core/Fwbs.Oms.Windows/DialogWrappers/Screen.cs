@@ -77,18 +77,3 @@ namespace FWBS.OMS.UI
 
 
 }
-
-
-namespace FWBS.OMS.UI.Windows
-{
-    partial class Services
-    {
-        [Obsolete("Please use FWBS.OMS.UI.Screen instead.")]
-        public sealed class Screens : FWBS.OMS.UI.Screen
-        {
-            public Screens(EnquiryEngine.Enquiry enq) : base(enq)
-            {
-            }
-        }
-    }
-}

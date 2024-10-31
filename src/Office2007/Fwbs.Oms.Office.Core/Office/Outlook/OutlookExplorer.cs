@@ -2282,8 +2282,6 @@ namespace Fwbs.Office.Outlook
         [ComImport, EditorBrowsable(EditorBrowsableState.Never), Guid("00020400-0000-0000-C000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         internal interface IDispatch
         {
-            [PreserveSig, System.Security.SecurityCritical, Obsolete("Bad signature. Fix and verify signature before use.", true)]
-            int GetTypeInfoCount();
             [PreserveSig, System.Security.SecurityCritical]
             int GetTypeInfo([In] int index, [In] int lcid, [MarshalAs(UnmanagedType.Interface)] out System.Runtime.InteropServices.ComTypes.ITypeInfo pTypeInfo);
             [PreserveSig, System.Security.SecurityCritical]
@@ -2291,9 +2289,5 @@ namespace Fwbs.Office.Outlook
             [PreserveSig, System.Security.SecurityCritical]
             int Invoke();
         }
-
-
-
-
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Data;
 using System.Diagnostics;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
@@ -35,7 +34,6 @@ namespace FWBS.OMS
         /// <remarks></remarks>
         string ClientNo { get; }
     }
-
 
     /// <summary>
     /// A Client object that holds all information about a group of clients that make a client
@@ -283,7 +281,6 @@ namespace FWBS.OMS
             //Call the extensibility event for addins.
             this.OnExtLoaded();
         }
-
 
         /// <summary>
         /// Creates a client with a specified client type and default contact.
@@ -557,7 +554,7 @@ namespace FWBS.OMS
 			// Take current CLTYPEID and populate the contacts
 			try
 			{
-				_session = Session.OMS;
+				_session = Session.CurrentSession;
 
 				_client.Merge(GetClientData(new string[] {Table_Files}),true);
 
@@ -565,7 +562,6 @@ namespace FWBS.OMS
 
 				// Rename the default tables, must be kept in the same order
 				NameTables();
-			
 			}
 			catch(Exception ex)
 			{
@@ -593,10 +589,8 @@ namespace FWBS.OMS
                 }
             }
 
-
             //Refresh the security
             SecurityManager.CurrentManager.Refresh(this);
-		
 		}
 
         /// <summary>
@@ -792,25 +786,6 @@ namespace FWBS.OMS
 				return conts;
 			}
 		}
-
-        /// <summary>
-        /// Gets the omsfiles collection in object form.
-        /// </summary>
-        /// <remarks></remarks>
-        [Obsolete]
-        public OMSFile[] OMSFiles
-        {
-            get
-            {
-                DataView vw = GetFiles(true);
-                OMSFile[] omsfiles = new OMSFile[vw.Count];
-                for (int ctr = 0; ctr < omsfiles.Length; ctr++)
-                {
-                    omsfiles[ctr] = OMSFile.GetFile((long)vw[ctr]["fileid"]);
-                }
-                return omsfiles;
-            }
-        }
 
         /// <summary>
         /// Gets or Sets the clients default contact.
@@ -5066,8 +5041,4 @@ namespace FWBS.OMS
         /// </summary>
 		ClientCreated = 21
 	}
-
-
 }
-
-

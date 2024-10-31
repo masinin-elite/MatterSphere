@@ -166,16 +166,6 @@ namespace FWBS.OMS.UI.Windows.Admin
 		}
 
 
-        [Obsolete("This method is no longer used", false)]
-        private void ResizeToolbarButtons()
-        {
-            this.tbcEdit.Visible = false;
-            this.tbcEdit.ButtonSize = new Size(17, 17);
-            this.tbcEdit.ButtonSize = new Size(16, 16);
-            this.tbcEdit.Visible = true;
-        }
-
-
 		protected override void Clone(string Code)
 		{
             try

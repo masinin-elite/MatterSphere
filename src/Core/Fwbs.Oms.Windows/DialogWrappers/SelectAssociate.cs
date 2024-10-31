@@ -92,7 +92,7 @@ namespace FWBS.OMS.UI
             FWBS.Common.KeyValueCollection x = new FWBS.Common.KeyValueCollection();
             x.Add("Private", AllowPrivateAssociate);
             Enquiry e = Enquiry.GetEnquiry(Session.CurrentSession.SelectAssociateEnquiryOverride, null, EnquiryMode.Add, x);
-            Services.Screens n = new Services.Screens(e);
+            Screen n = new Screen(e);
             Associate associate = n.Show(owner) as Associate;
             return associate;
         }

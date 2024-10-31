@@ -170,47 +170,7 @@ namespace FWBS.OMS.FileManagement.Milestones
         private void RaiseDuePropertyChanged()
         {
             RaisePropertyChanged("Due");
-            RaisePropertyChanged("_DueUI");
         }
-
-		[Obsolete("Please use Due")]
-		public DateTime? _DueUI
-		{
-			get
-			{
-				return Due;								
-			}
-			set
-			{
-				if (value == Due)
-				{
-					return;
-				}
-
-				ArrayList reasons = new ArrayList();
-				try
-				{
-					if (Application.CanChangeStageDueUI(this, reasons))
-					{
-						Due = value;
-						RaiseDuePropertyChanged();
-					}
-					else
-					{						
-						throw Utils.ThrowCantChangeStageDue(this, reasons);
-					}
-				}
-				catch (Exception ex)
-				{
-					FWBS.OMS.UI.Windows.ErrorBox.Show(ex);
-				}
-				finally
-				{ 
-					RaiseDuePropertyChanged(); 
-				}
-				                                
-			}
-		}
 
 		public bool IsCompleted
 		{

@@ -1366,8 +1366,6 @@ inboxfee:
                         Case "OTHER"
                             If pars(3) = "USER" Then
                                 usr = Services.Searches.FindUser(ActiveWindow)
-                            Else
-                                usr = Services.Searches.FindFeeEarner(ActiveWindow)
                             End If
                             If Not usr Is Nothing Then
                                 If (usr.ID = Session.CurrentSession.CurrentUser.ID) Then
@@ -1395,8 +1393,6 @@ taskfee:
                         Case "OTHER"
                             If pars(3) = "USER" Then
                                 usr = Services.Searches.FindUser(ActiveWindow)
-                            Else
-                                usr = Services.Searches.FindFeeEarner(ActiveWindow)
                             End If
                             If Not usr Is Nothing Then
                                 If (usr.ID = Session.CurrentSession.CurrentUser.ID) Then
@@ -1439,8 +1435,6 @@ calfee:
                         Case "OTHER"
                             If pars(3) = "USER" Then
                                 usr = Services.Searches.FindUser(ActiveWindow)
-                            Else
-                                usr = Services.Searches.FindFeeEarner(ActiveWindow)
                             End If
                             If Not usr Is Nothing Then
                                 If (usr.ID = Session.CurrentSession.CurrentUser.ID) Then
@@ -1823,13 +1817,6 @@ calfee:
 
                 If (obj.ReceivedTime <> MAX_DATE) Then
                     subdoc.AuthoredDate = item.ReceivedTime
-                End If
-
-
-                If (Not String.IsNullOrEmpty(item.SenderName)) Then
-                    subdoc.From = item.SenderName
-                Else
-                    subdoc.From = item.SenderEmailAddress
                 End If
 
                 subdoc.To = item.To

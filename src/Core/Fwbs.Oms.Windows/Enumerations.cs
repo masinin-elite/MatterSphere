@@ -27,8 +27,6 @@ namespace FWBS.OMS.UI.Windows
 	/// </summary>
 	public enum ClosingWhy
 	{
-        [Obsolete("Please use Cancel or Saved instead of Closing.")]
-		Closing,
 		Cancel,
 		Saved
 	}

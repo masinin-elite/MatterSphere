@@ -82,7 +82,7 @@ namespace FWBS.OMS.UI.Windows
             }
         }
                 
-        protected override void InternalSave(object obj)
+        protected override void InternalSave(object obj, bool createFileIfNew)
         {
             CheckObjectIsDoc(ref obj);
             ShellFile sf = (ShellFile)obj;

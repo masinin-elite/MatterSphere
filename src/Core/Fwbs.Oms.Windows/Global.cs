@@ -100,7 +100,7 @@ namespace FWBS.OMS.UI.Windows
         /// <param name="ctrl">Control to be checked for child controls.</param>
         static internal void ControlParser(Control ctrl)
         {
-            if (Session.OMS != null)
+            if (Session.CurrentSession != null)
             {
                 try
                 {

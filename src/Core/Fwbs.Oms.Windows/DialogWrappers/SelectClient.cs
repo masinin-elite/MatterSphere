@@ -34,7 +34,7 @@ namespace FWBS.OMS.UI
         private Client ShowOverride(IWin32Window owner)
         {
             Enquiry e = Enquiry.GetEnquiry(Session.CurrentSession.SelectClientEnquiryOverride, null, EnquiryMode.Add, new FWBS.Common.KeyValueCollection());
-            Services.Screens n = new Services.Screens(e);
+            Screen n = new Screen(e);
             Client client = n.Show(owner) as Client;
             return client;
         }
