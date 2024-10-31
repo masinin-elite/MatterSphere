@@ -4976,7 +4976,8 @@ from dbcommandbarcontrol", "CONTROLS", pars.ToArray());
         private Assembly ResolveAssembly(object sender, ResolveEventArgs args)
         {
             string assemblyName = args.Name;
-            if (assemblyName.StartsWith("Microsoft.Web.WebView2") && !assemblyName.Contains(".resources"))
+            if (assemblyName.StartsWith("Newtonsoft.Json") ||
+                (assemblyName.StartsWith("Microsoft.Web.WebView2") && !assemblyName.Contains(".resources")))
             {
                 string filename = $"{assemblyName.Split(',')[0]}.dll";
                 try
