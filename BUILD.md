@@ -32,7 +32,7 @@ Make sure the following commercial software is purchased and installed:
 
 | Software | Required for building |
 |-|-|
-|Actipro SyntaxEditor v4.0.0290 for Windows Forms + SyntaxEditor .NET Languages Add-on| Core, Workflow |
+|Actipro SyntaxEditor v18.1.0342 for Windows Forms + SyntaxEditor .NET Languages Add-on| Core, Workflow |
 | Aspose.Total for .NET 22.9 | Core, PDFBundler, ESIndex, MCEP |
 | Telerik UI for WinForms 2018.2.621 | Core, HighQ Add-in, Workflow Add-in |
 | Infragistics UI for WinForms 19.2 | Core, Security |
