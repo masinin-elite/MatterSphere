@@ -1,4 +1,6 @@
+Imports System.Collections.Generic
 Imports System.Reflection
+Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
 Imports FWBS.OMS.DocumentManagement
 Imports FWBS.OMS.DocumentManagement.Storage
@@ -326,31 +328,30 @@ Public Class WordOMS2
         Try
             CheckObjectIsDoc(obj)
 
-            doc = obj
+            doc = DirectCast(obj, Word.Document)
             changed = Not doc.Saved
 
-            If HasDocVariableInternal(obj, varName) Then
-                obj.Variables.Item(varName).Delete()
+            If HasDocVariableInternal(doc, varName) Then
+                doc.Variables.Item(varName).Delete()
             End If
-            If (HasDocProperty(obj, varName)) Then
-                RemoveDocPropertyInternal(obj, varName)
+            If (HasDocProperty(doc, varName)) Then
+                RemoveDocPropertyInternal(doc, varName)
             End If
 
             Dim legacyname As String = ConvertToLegacyVariableName(varName)
-            If HasDocVariableInternal(obj, legacyname) Then
-                obj.Variables.Item(legacyname).Delete()
+            If HasDocVariableInternal(doc, legacyname) Then
+                doc.Variables.Item(legacyname).Delete()
             End If
-            If (HasDocProperty(obj, legacyname)) Then
-                RemoveDocPropertyInternal(obj, legacyname)
+            If (HasDocProperty(doc, legacyname)) Then
+                RemoveDocPropertyInternal(doc, legacyname)
             End If
 
         Catch ex As Exception
-            Debug.WriteLine(ex.Message)
+            Trace.TraceError($"Error in RemoveDocVariable: {ex.Message}")
+            Throw
         Finally
-            If Not doc Is Nothing And changed = False Then
-                If doc.Saved = False Then
-                    doc.Saved = True
-                End If
+            If doc IsNot Nothing AndAlso Not changed AndAlso Not doc.Saved Then
+                doc.Saved = True
             End If
         End Try
     End Sub
@@ -417,10 +418,15 @@ Public Class WordOMS2
 
     Private Function HasDocVariableInternal(ByVal obj As Object, ByVal varName As String) As Boolean
         Try
-            Call CheckObjectIsDoc(obj)
-            Dim tmp As Object = obj.Variables.Item(varName).Value
+            CheckObjectIsDoc(obj)
+            Dim doc As Word.Document = DirectCast(obj, Word.Document)
+
+            Dim tmp As Object = doc.Variables.Item(varName).Value
             Return True
-        Catch
+        Catch ex As KeyNotFoundException
+            Return False
+        Catch ex As Exception
+            Trace.TraceError($"Error in HasDocVariableInternal: {ex.Message}")
             Return False
         End Try
     End Function
@@ -430,32 +436,38 @@ Public Class WordOMS2
         Dim changed As Boolean = False
 
         Try
-            Call CheckObjectIsDoc(obj)
-            doc = obj
+            CheckObjectIsDoc(obj)
+            doc = DirectCast(obj, Word.Document)
             changed = Not doc.Saved
+
             Try
-                obj.Variables.Item(varName).Delete()
-            Catch
+                doc.Variables.Item(varName).Delete()
+            Catch ex As Exception
+                Trace.WriteLine($"Variable '{varName}' not found or could not be deleted: {ex.Message}")
             End Try
-            If TypeOf val Is String Then
-                If val = "" Then val = " "
+
+            If TypeOf val Is String AndAlso String.IsNullOrEmpty(DirectCast(val, String)) Then
+                val = " "
             End If
-            obj.Variables.Add(varName, val)
+
+            doc.Variables.Add(varName, val)
+
             If Array.IndexOf(FieldExclusionList, varName) > -1 Then
                 Try
-                    RemoveDocPropertyInternal(obj, varName)
-                Catch
+                    RemoveDocPropertyInternal(doc, varName)
+                Catch ex As Exception
+                    Trace.WriteLine($"Error removing document property '{varName}': {ex.Message}")
                 End Try
-                SetDocPropertyInternal(obj, varName, val)
+                SetDocPropertyInternal(doc, varName, val)
             End If
+
             Return True
-        Catch
+        Catch ex As Exception
+            Trace.WriteLine($"Error in SetDocVariable: {ex.Message}")
             Return False
         Finally
-            If Not doc Is Nothing And changed = False Then
-                If doc.Saved = False Then
-                    doc.Saved = True
-                End If
+            If doc IsNot Nothing AndAlso Not changed AndAlso Not doc.Saved Then
+                doc.Saved = True
             End If
         End Try
 
@@ -1084,7 +1096,7 @@ Public Class WordOMS2
             RefreshRibbon()
             _app.Run("JobProcessed")
         Catch ex As Exception
-
+            Trace.TraceError($"An error occurred in OnJobProcessed: {ex.Message}")
         End Try
 
     End Sub
@@ -1919,25 +1931,30 @@ top:
     End Sub
 
     Public Overloads Overrides Sub SetFieldValue(ByVal obj As Object, ByVal index As Integer, ByVal val As Object)
+        Try
 
-        Call CheckObjectIsDoc(obj)
+            CheckObjectIsDoc(obj)
+            Dim doc As Word.Document = DirectCast(obj, Word.Document)
 
-        Dim strval As String = Convert.ToString(val)
+            Dim strval As String = Convert.ToString(val)
 
-        If TypeOf val Is FWBS.OMS.Address Then
-            Dim add As FWBS.OMS.Address
-            add = CType(val, FWBS.OMS.Address)
-            If Not (String.IsNullOrWhiteSpace(add.AddressFormat)) Then
-                obj.Variables(index).Value = UseCountryAddressFormat(add)
+            If TypeOf val Is FWBS.OMS.Address Then
+                Dim add As FWBS.OMS.Address
+                add = CType(val, FWBS.OMS.Address)
+                If Not (String.IsNullOrWhiteSpace(add.AddressFormat)) Then
+                    doc.Variables(index).Value = UseCountryAddressFormat(add)
+                Else
+                    doc.Variables(index).Value = DefaultFieldFormat(strval)
+                End If
             Else
-                obj.Variables(index).Value = DefaultFieldFormat(strval)
+                doc.Variables(index).Value = DefaultFieldFormat(strval)
             End If
-        Else
-            obj.Variables(index).Value = DefaultFieldFormat(strval)
-        End If
 
-        index = index + 1
-
+            index += 1
+        Catch ex As Exception
+            Trace.TraceError($"Error in SetFieldValue by index: {ex.Message}")
+            Throw
+        End Try
     End Sub
 
     Public Overloads Overrides Sub SetFieldValue(ByVal obj As Object, ByVal name As String, ByVal val As Object)
@@ -2031,28 +2048,48 @@ top:
 
     Public Overrides Function GetFieldCount(ByVal obj As Object) As Integer
         Try
-            Call CheckObjectIsDoc(obj)
-            Return obj.Variables.Count
-        Catch
+            CheckObjectIsDoc(obj)
+            Dim doc As Word.Document = DirectCast(obj, Word.Document)
+            Return doc.Variables.Count
+        Catch ex As Exception
+            Trace.TraceError($"Error in GetFieldCount: {ex.Message}")
             Return 0
         End Try
     End Function
 
     Public Overrides Function GetFieldName(ByVal obj As Object, ByVal index As Integer) As String
-        Call CheckObjectIsDoc(obj)
-        index = index + 1
-        Return obj.Variables(index).Name
+        Try
+            CheckObjectIsDoc(obj)
+            Dim doc As Word.Document = DirectCast(obj, Word.Document)
+            index += 1
+            Return doc.Variables(index).Name
+        Catch ex As Exception
+            Trace.TraceError($"Error in GetFieldName: {ex.Message}")
+            Throw
+        End Try
     End Function
 
     Public Overloads Overrides Function GetFieldValue(ByVal obj As Object, ByVal index As Integer) As Object
-        Call CheckObjectIsDoc(obj)
-        index = index + 1
-        Return obj.Variables(index).Value
+        Try
+            CheckObjectIsDoc(obj)
+            Dim doc As Word.Document = DirectCast(obj, Word.Document)
+            index += 1
+            Return doc.Variables(index).Value
+        Catch ex As Exception
+            Trace.TraceError($"Error in GetFieldValue by index: {ex.Message}")
+            Throw
+        End Try
     End Function
 
     Public Overloads Overrides Function GetFieldValue(ByVal obj As Object, ByVal name As String) As Object
-        Call CheckObjectIsDoc(obj)
-        Return obj.Variables(name).Value
+        Try
+            CheckObjectIsDoc(obj)
+            Dim doc As Word.Document = DirectCast(obj, Word.Document)
+            Return doc.Variables(name).Value
+        Catch ex As Exception
+            Trace.TraceError($"Error in GetFieldValue by name: {ex.Message}")
+            Throw
+        End Try
     End Function
 
     Protected Overrides Sub CustomUpdateDocFields(ByVal obj As Object, ByVal precLink As PrecedentLink)
@@ -2102,7 +2139,7 @@ top:
     End Sub
 
     Public Overrides Sub CheckFields(ByVal obj As Object)
-        Call CheckObjectIsDoc(obj)
+        CheckObjectIsDoc(obj)
 
         Dim indoc As Word.Document = DirectCast(obj, Word.Document)
         Dim a As Integer
@@ -2110,14 +2147,14 @@ top:
         '14/06/2004 - Added by GM to prevent update of fields on documents with this doc variable existing.  Improved speed for CDS11 for example.
 
         If (HasDocVariableInternal(indoc, "DONTUPDATEFORMFIELDS")) Then
-            Exit Sub
+            Return
         End If
 
 
         Using pd As WordOMS2.UnProtect = New WordOMS2.UnProtect(indoc)
             ' Used to detect and if the document is still protected then exit update fields
             If indoc.ProtectionType <> Word.WdProtectionType.wdNoProtection Then
-                Exit Sub
+                Return
             End If
 
 
@@ -2191,16 +2228,16 @@ top:
                 Next
 
                 'Added to update expressional fields that refer to each other.
-                If Not expflds Is Nothing Then
+                If expflds IsNot Nothing Then
                     For Each expfld As Word.Field In expflds
-                        If expfld Is Nothing Then
-                        Else
+                        If expfld IsNot Nothing Then
                             LinkField(expfld)
                         End If
                     Next
                 End If
 
             Catch ex As Exception
+                Trace.TraceError($"Error in CheckFields: {ex.Message}")
                 Throw
             Finally
                 indoc.Application.ScreenUpdating = True
@@ -2234,7 +2271,7 @@ top:
             'Unlink any date time fields
             fld.Unlink()
         Else
- 
+
             If CheckUpdateFieldType(fld.Type) Then
                 fld.Update()
             End If
@@ -3276,6 +3313,11 @@ top:
         Private p As String
 
         Public Sub New(ByVal doc As Word.Document)
+
+            If doc Is Nothing Then
+                Throw New ArgumentNullException(NameOf(doc), "Document cannot be null.")
+            End If
+
             Me.doc = doc
             type = doc.ProtectionType
 
@@ -3288,12 +3330,14 @@ top:
             Try
                 doc.Unprotect(p1)
                 p = p1
-            Catch comex As System.Runtime.InteropServices.COMException 'When comex.ErrorCode = -2146822803 - removed error code check incase different between versions
+            Catch comex As COMException 'When comex.ErrorCode = -2146822803 - removed error code check incase different between versions
+                Trace.TraceError($"First unprotect attempt failed: {comex.Message}")
+
                 Try
                     doc.Unprotect(p2)
                     p = p2
-                Catch comex2 As System.Runtime.InteropServices.COMException 'When comex2.ErrorCode = -2146822803
-
+                Catch comex2 As COMException 'When comex2.ErrorCode = -2146822803
+                    Trace.TraceError($"Second unprotect attempt failed: {comex2.Message}")
                 End Try
             Finally
                 If doc.Saved <> saved Then

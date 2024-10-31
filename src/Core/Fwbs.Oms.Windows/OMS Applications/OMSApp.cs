@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using FWBS.OMS.Interfaces;
@@ -3110,18 +3111,28 @@ namespace FWBS.OMS.UI.Windows
                         BeginPrint(new object[1] { obj }, settings);
                     }
                 }
-
             }
-            finally
+            catch (Exception ex)
             {
-                try
+                Trace.TraceError($"{ex.Message}{Environment.NewLine}{ex.StackTrace}");
+                if (Session.CurrentSession.IsInDebug)
                 {
-                    RemoveDocVariable(obj, PROCESSING);
+                    ErrorBox.Show(ex);
                 }
-                catch
+            }
+
+            try
+            {
+                RemoveDocVariable(obj, PROCESSING);
+            }
+            catch (Exception ex)
+            {
+                //Document could be closed therfore Word causing
+                //An object deleted COM exception
+                Trace.TraceError($"{ex.Message}{Environment.NewLine}{ex.StackTrace}");
+                if (Session.CurrentSession.IsInDebug)
                 {
-                    //Document could be closed therfore Word causing
-                    //An object deleted COM exception
+                    ErrorBox.Show(ex);
                 }
             }
 
