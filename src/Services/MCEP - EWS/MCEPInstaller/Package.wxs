@@ -25,9 +25,9 @@
     <Feature Id="Main">
       <ComponentRef Id="MCEPProfilerEWS.Service" Primary="yes" />
       <ComponentRef Id="MCEPStorerEWS.Service" Primary="yes" />
-      <ComponentGroupRef Id="MCEPGlobalClasses.Binaries" Primary="yes" />
-      <ComponentGroupRef Id="MCEPGlobalClasses.Content" Primary="yes" />
-      <ComponentGroupRef Id="MCEPControlForm.Binaries" Primary="yes" />
+      <ComponentRef Id="MCEP.ControlForm" Primary="yes" />
+      <ComponentRef Id="MCEP.GlobalClasses" Primary="yes" />
+      <ComponentRef Id="MCEP.DatabaseScripts" Primary="yes" />
       <ComponentRef Id="MCEP.Dependencies" Primary="yes" />
       <ComponentRef Id="MCEPAdminShortcut" Primary="yes" />
     </Feature>

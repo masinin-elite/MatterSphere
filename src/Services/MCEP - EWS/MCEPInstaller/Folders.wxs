@@ -3,9 +3,7 @@
     <StandardDirectory Id="ProgramFiles6432Folder">
       <Directory Id="ManufacturerFolder" Name="!(bind.Property.ProductFamily)">
         <Directory Id="INSTALLFOLDER" Name="!(bind.Property.ShortProductName)">
-          <Directory Id="MCEPControlForm.Binaries" />
-          <Directory Id="MCEPGlobalClasses.Binaries" />
-          <Directory Id="MCEPGlobalClasses.Content" />
+          <Directory Id="DatabaseScripts" Name="DatabaseScripts" />
         </Directory>
       </Directory>
     </StandardDirectory>

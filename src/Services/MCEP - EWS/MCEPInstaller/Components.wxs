@@ -36,6 +36,26 @@
   </Fragment>
 
   <Fragment>
+    <Component Id="MCEP.ControlForm" Guid="{1525133C-84FD-4310-A14C-BAA7E6282DAD}" Directory="INSTALLFOLDER">
+      <File Source="$(SourceDir)\MCEPControlForm.exe" />
+      <File Source="$(SourceDir)\MCEPControlForm.exe.config" />
+    </Component>
+  </Fragment>
+
+  <Fragment>
+    <Component Id="MCEP.GlobalClasses" Guid="{5CBE14E2-E06A-4C26-9C65-846406E69535}" Directory="INSTALLFOLDER">
+      <File Source="$(SourceDir)\MCEPGlobalClasses.dll" />
+    </Component>
+  </Fragment>
+
+  <Fragment>
+    <Component Id="MCEP.DatabaseScripts" Guid="{4B3F5B45-C076-4AB9-9550-2DD557B998EF}" Directory="DatabaseScripts">
+      <File Source="$(SourceDir)\DatabaseScripts\StoredProcs.sql" />
+      <File Source="$(SourceDir)\DatabaseScripts\Tables.sql" />
+    </Component>
+  </Fragment>
+  
+  <Fragment>
     <Component Id="MCEP.Dependencies" Guid="{951115D2-EA62-4585-A881-4D643597CA80}" Directory="INSTALLFOLDER">
       <File Source="$(SourceDir)\FWBS.Common.dll" />
       <File Source="$(SourceDir)\Fwbs.Documents.JZipPackageProperties.dll" />
