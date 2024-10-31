@@ -476,12 +476,12 @@ namespace FWBS.OMS.SourceEngine
 
             foreach (var item in LocalDateColumns)
             {
-                executeParameters.DateTimeColumns.Add(item, new DateTimeItem { Kind = DateTimeKind.Local });
+                executeParameters.DateTimeColumns[item] = new DateTimeItem { Kind = DateTimeKind.Local };
             }
 
             foreach (var item in localDateParameters)
             {
-                executeParameters.DateTimeParameters.Add(item, new DateTimeItem { Kind = DateTimeKind.Local });
+                executeParameters.DateTimeParameters[item] = new DateTimeItem { Kind = DateTimeKind.Local };
             }
 
             retVal = returnDataSet
