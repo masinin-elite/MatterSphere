@@ -5,7 +5,7 @@
     <ProductFamily>3E MatterSphere</ProductFamily>
     <ShortProductName>PDF Bundler</ShortProductName>
     <PublisherName>ELITE</PublisherName>
-    <ProductVersion>10.1.0</ProductVersion>
+    <ProductVersion>10.1.1</ProductVersion>
     <UpgradeCode>82B3C2FC-902D-4D80-BD83-75AFBCE182DD</UpgradeCode>
     <SourceDir></SourceDir>
     <OutputName>3EMatterSpherePDFBundlerInstaller</OutputName>

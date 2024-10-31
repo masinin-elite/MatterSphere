@@ -5,7 +5,7 @@
     <ProductFamily>3E MatterSphere</ProductFamily>
     <ShortProductName>EWS Sync</ShortProductName>
     <PublisherName>ELITE</PublisherName>
-    <ProductVersion>10.1.0</ProductVersion>
+    <ProductVersion>10.1.1</ProductVersion>
     <UpgradeCode>8AB90E75-FDA9-48AD-86ED-32F04CFA5BA5</UpgradeCode>
     <SourceDir>C:\MSEWSOutput</SourceDir>
     <OutputName>3EMatterSphereEWSSyncInstaller</OutputName>
