@@ -6,10 +6,8 @@ using System.Linq;
 using FWBS.Common.Security.Cryptography;
 using FWBS.OMS.Data.Exceptions;
 
-
 namespace FWBS.OMS.Data
 {
-
     /// <summary>
     /// A base connection object that makes any type of connection object transparent
     /// too the sata source it connects to.
@@ -637,17 +635,6 @@ namespace FWBS.OMS.Data
             return ds;
         }
 
-        [Obsolete("Please use Execute(DataSetExecuteParameters) instead.")]
-        public DataSet ExecuteSQLDataSet(ConnectionExecuteParameters parameters)
-        {
-            if (parameters == null)
-                throw new ArgumentNullException("parameters");
-
-            var p = ConvertExecuteParameters<DataSetExecuteParameters>(parameters);
-
-            return Execute(p);
-        }
-
         public DataSet ExecuteSQLDataSet(string sql, string[] tableNames, IDataParameter[] parameters)
         {
             var cp = new DataSetExecuteParameters();
@@ -771,17 +758,6 @@ namespace FWBS.OMS.Data
 
         protected abstract object InternalExecuteSQLScalar(IDbCommand command);
 
-        [Obsolete("Please use ExecuteScalar(ExecuteParameters) instead.")]
-        public object ExecuteSQLScalar(ConnectionExecuteParameters parameters)
-        {
-            if (parameters == null)
-                throw new ArgumentNullException("parameters");
-
-            var p = ConvertExecuteParameters<ExecuteParameters>(parameters);
-
-            return ExecuteScalar(p);
-        }
-
         public object ExecuteSQLScalar(string sql, IDataParameter[] parameters)
         {
             var cp = new ExecuteParameters();
@@ -855,18 +831,6 @@ namespace FWBS.OMS.Data
 
 
         protected abstract IDataReader InternalExecuteSQLReader(IDbCommand command);
-
-        [Obsolete("Please use ExecuteReader(ExecuteParameters) instead.")]
-        public IDataReader ExecuteSQLReader(ConnectionExecuteParameters parameters)
-        {
-            if (parameters == null)
-                throw new ArgumentNullException("parameters");
-
-            var p = ConvertExecuteParameters<ExecuteParameters>(parameters);
-
-            return ExecuteReader(p);
-        }
-
 
         public IDataReader ExecuteSQLReader(string sql, IDataParameter[] parameters)
         {
@@ -962,17 +926,6 @@ namespace FWBS.OMS.Data
 
 
         protected abstract int InternalExecuteSQL(IDbCommand command);
-
-        [Obsolete("Please use Execute(ExecuteParameters) instead.")]
-        public int ExecuteSQL(ConnectionExecuteParameters parameters)
-        {
-            if (parameters == null)
-                throw new ArgumentNullException("parameters");
-
-            var p = ConvertExecuteParameters<ExecuteParameters>(parameters);
-
-            return Execute(p);
-        }
 
         public int ExecuteSQL(string sql, params IDataParameter[] parameters)
         {
@@ -1273,7 +1226,6 @@ namespace FWBS.OMS.Data
         /// </summary>
         /// <param name="dt">Data table to update</param>
         /// <param name="selectStatement">Select statement.</param>
-        [Obsolete("Please use the newer Update methods", false)]
         public void Update(DataTable dt, string selectStatement)
         {
             Connect();
@@ -1297,43 +1249,6 @@ namespace FWBS.OMS.Data
 
         protected abstract void InternalUpdate(DataTable dt, string selectStatement);
 
-        /// <summary>
-        /// Updates a singular row, this method should deal with getting back a new identity column
-        /// value if the row was added.
-        /// </summary>
-        /// <param name="row">Row object by reference.</param>
-        /// <param name="selectStatement">Select statement used by a command builder.</param>
-        /// <param name="whereStatement">The where clause of the select statement.</param>
-        /// <param name="identityColumn">The identity column name for addin new rows.</param>
-        /// <param name="tableName">The table name of the returned table if the record needs refreshed.</param>
-        /// <returns>A data table of refreshed data information with a new identity column.</returns>
-        [Obsolete("Please use the newer Update methods", false)]
-        public DataTable Update(DataRow row, string selectStatement, string whereStatement, string identityColumn, string tableName)
-        {
-            Connect();
-
-            try
-            {
-                return InternalUpdate(row, selectStatement, whereStatement, identityColumn, tableName);
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLineIf(Global.LogSwitch.TraceError, ex.Message, Global.LogSwitch.DisplayName);
-				throw new ConnectionException("Update Error" + Environment.NewLine + Environment.NewLine + "Connection : " 
-					+ Environment.NewLine + "     " + _cnn.ConnectionString 
-					+ Environment.NewLine + "Updating : " 
-					+ Environment.NewLine + "     " + string.Format("{0} {1}",selectStatement,whereStatement)
-					+ Environment.NewLine + ex.Message, ex);                
-            }
-            finally
-            {
-                Disconnect();
-            }
-        }
-
-
-        protected abstract DataTable InternalUpdate(DataRow row, string selectStatement, string whereStatement, string identityColumn, string tableName);
-
 
         /// <summary>
         /// Updates the specified table using source column mapping and specific DML statements.
@@ -1343,7 +1258,6 @@ namespace FWBS.OMS.Data
         /// <param name="update">The update sql statement or stored procedure.</param>
         /// <param name="delete">The delete sql statement or stored procedure.</param>
         /// <param name="parameters">The parameters to use.</param>
-        [Obsolete("Please use the newer Update methods", false)]
         public void Update(DataTable dt, string insert, string update, string delete, IDataParameter[] parameters)
         {
 
@@ -1407,7 +1321,6 @@ namespace FWBS.OMS.Data
         }
 
         protected abstract void InternalUpdate(DataTable dt, string tableName, bool refresh, params string[] fields);
-
 
         #endregion
 

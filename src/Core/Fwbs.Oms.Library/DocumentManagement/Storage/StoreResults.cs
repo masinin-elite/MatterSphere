@@ -8,10 +8,6 @@ namespace FWBS.OMS.DocumentManagement.Storage
         private System.IO.FileInfo local;
         private string token;
 
-        [Obsolete("Please use the Constructor which takes the FileInfo object")]
-        public StoreResults(IStorageItem item, string token): this(item, token, null)
-        {}
-
         public StoreResults(IStorageItem item, string token, System.IO.FileInfo local)
         {
             if (item == null)

@@ -1483,41 +1483,6 @@ namespace FWBS.OMS
             }
         }
 
-		/// <summary>
-		/// Gets or Sets the document waller property.
-		/// </summary>
-		[EnquiryUsage(true)]
-		[System.ComponentModel.Browsable(false)]
-        [Obsolete("Wallets have been depricated. Use the FolderGUID property to save documents to folders.", false)]
-		public string Wallet
-		{
-			get
-			{
-                if (Convert.ToString(GetExtraInfo("docwallet")) != "")
-                    return Convert.ToString(GetExtraInfo("docwallet"));
-                else
-                {
-                    if (this.BasePrecedent != null && Convert.ToString(this.BasePrecedent.Wallet) != "")
-                    {
-                        SetExtraInfo("docwallet", Convert.ToString(this.BasePrecedent.Wallet));
-                        return Convert.ToString(this.BasePrecedent.Wallet);
-                    }
-                    else
-                    {
-                        SetExtraInfo("docwallet", "GENERAL");
-                        return "GENERAL";
-                    }
-                }
-			}
-			set
-			{
-				if (value == null || value == "")
-					SetExtraInfo("docwallet","GENERAL");
-				else			
-					SetExtraInfo("docwallet", value);
-			}
-		}
-
         [EnquiryUsage(true)]
         [System.ComponentModel.Browsable(false)]
         public Guid FolderGUID

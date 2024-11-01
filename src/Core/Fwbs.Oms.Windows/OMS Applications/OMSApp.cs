@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using FWBS.OMS.Interfaces;
@@ -2080,20 +2081,8 @@ namespace FWBS.OMS.UI.Windows
         /// Performs an internal save routine which will save a document quickly without any OMS intervention.
         /// </summary>
         /// <param name="obj">The document object.</param>
-        [Obsolete("Please override InternalSave(obj, bool) instead. Thank you")]
-        protected virtual void InternalSave(object obj)
-        {
-        }
-
-        /// <summary>
-        /// Performs an internal save routine which will save a document quickly without any OMS intervention.
-        /// </summary>
-        /// <param name="obj">The document object.</param>
         /// <param name="createFileIfNew">Does not save a new file as a temp but just flags the document as saved.</param>
-        protected virtual void InternalSave(object obj, bool createFileIfNew)
-        {
-            InternalSave(obj);
-        }
+        protected virtual void InternalSave(object obj, bool createFileIfNew) { }
 
         /// <summary>
         /// Allows the OMS application to set default values for a storage item.
@@ -3122,18 +3111,28 @@ namespace FWBS.OMS.UI.Windows
                         BeginPrint(new object[1] { obj }, settings);
                     }
                 }
-
             }
-            finally
+            catch (Exception ex)
             {
-                try
+                Trace.TraceError($"{ex.Message}{Environment.NewLine}{ex.StackTrace}");
+                if (Session.CurrentSession.IsInDebug)
                 {
-                    RemoveDocVariable(obj, PROCESSING);
+                    ErrorBox.Show(ex);
                 }
-                catch
+            }
+
+            try
+            {
+                RemoveDocVariable(obj, PROCESSING);
+            }
+            catch (Exception ex)
+            {
+                //Document could be closed therfore Word causing
+                //An object deleted COM exception
+                Trace.TraceError($"{ex.Message}{Environment.NewLine}{ex.StackTrace}");
+                if (Session.CurrentSession.IsInDebug)
                 {
-                    //Document could be closed therfore Word causing
-                    //An object deleted COM exception
+                    ErrorBox.Show(ex);
                 }
             }
 

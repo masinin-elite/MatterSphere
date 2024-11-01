@@ -1844,7 +1844,7 @@ namespace Fwbs.Oms.Office.Common
             if (!Session.CurrentSession.IsLoggedIn)
                 return false;
 
-            return menuScriptsAgg.Execute(OfficeOMSAddin.Current.Application, OfficeOMSAddin.Current.OMSApplication, commands[1]);
+            return menuScriptsAgg.Invoke(commands[1]);
         }
 
         internal string RunScriptCommand(string commandName,  FWBS.Common.KeyValueCollection properties)

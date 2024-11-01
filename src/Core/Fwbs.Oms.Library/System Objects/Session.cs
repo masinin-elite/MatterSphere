@@ -21,7 +21,7 @@ namespace FWBS.OMS
     /// This object is enquiry compatible due to being derived from branch.
     /// </summary>
     [Security.SecurableType("SYSTEM")]
-    public class Session : Branch, FWBS.OMS.Data.IDatabaseSchema, Interfaces.IEnquiryCompatible, Security.ISecurable
+    public class Session : Branch, IDatabaseSchema, Interfaces.IEnquiryCompatible, Security.ISecurable
     {
         #region RegistryRes
         public string RegistryRes(string Code, string Default)
@@ -787,7 +787,7 @@ namespace FWBS.OMS
                 else
                 {
 
-                    CachedQueries.Add<Caching.SchemaQueryCache>();
+                    CachedQueries.Add<Caching.Queries.SchemaQueryLocalCache>();
                     CachedItems.Add("OMS:SCHEMAS", new Caching.DataTableCache());
 
                     CachedItems.Add("OMS:DATABASEOBJECTS", new Caching.DataTableCache());
@@ -834,7 +834,7 @@ namespace FWBS.OMS
                 else
                 {
                     CachedItems.Add("OMS:CODELOOKUPS", new Caching.DataTableCache());
-                    CachedQueries.Add<Caching.Queries.ICodeLookupQueryCache>(new Caching.CodeLookupQueryCache());
+                    CachedQueries.Add<Caching.Queries.ICodeLookupQueryCache>(new Caching.Queries.CodeLookupLocalQueryCache());
                 }
 
 
@@ -1892,34 +1892,37 @@ namespace FWBS.OMS
             {
                 //Setup the default power profile for the current branch
                 SetupDefaultPowerProfile();
-                System.Collections.Generic.List<IDataParameter> pars = new System.Collections.Generic.List<IDataParameter>();
-                pars.Add(Connection.CreateParameter("LOGINTYPE", loginType));
-                pars.Add(Connection.CreateParameter("USERNAME", userName));
-                pars.Add(Connection.CreateParameter("TERMNAME", Common.Functions.GetMachineName()));
+                System.Collections.Generic.List<IDataParameter> pars = new System.Collections.Generic.List<IDataParameter>
+                {
+                    Connection.CreateParameter("LOGINTYPE", loginType),
+                    Connection.CreateParameter("USERNAME", userName),
+                    Connection.CreateParameter("TERMNAME", Functions.GetMachineName())
+                };
+
                 using (DataSet ds = Connection.ExecuteProcedureDataSet("sprLogin", new string[] { "USER", "TERMINAL", "PRINTER", "FEEUSER", "FEEEARNER", "FAVOURITES" }, pars.ToArray()))
                 {
-                    this._currentUser = new User(ds.Tables["USER"], userName);
-                    this._currentTerminal = new Terminal(ds.Tables["TERMINAL"]);
+                    _currentUser = new User(ds.Tables["USER"], userName);
+                    _currentTerminal = new Terminal(ds.Tables["TERMINAL"]);
                     if (ds.Tables["PRINTER"].Rows.Count == 0)
-                        this._currentPrinter = null;
+                        _currentPrinter = null;
                     else
-                        this._currentPrinter = new Printer(ds.Tables["PRINTER"]);
+                        _currentPrinter = new Printer(ds.Tables["PRINTER"]);
 
                     if (ds.Tables["FEEEARNER"].Rows.Count == 0)
-                        this._currentFeeEarner = null;
+                        _currentFeeEarner = null;
                     else
-                        this._currentFeeEarner = new FeeEarner(ds.Tables["FEEEARNER"], ds.Tables["FEEUSER"]);
+                        _currentFeeEarner = new FeeEarner(ds.Tables["FEEEARNER"], ds.Tables["FEEUSER"]);
 
-                    this._currentFavourites = new Favourites(ds.Tables["FAVOURITES"], _currentUser.ID);
+                    _currentFavourites = new Favourites(ds.Tables["FAVOURITES"], _currentUser.ID);
                 }
             }
             else
             {
-                this._currentUser = new User(loginType, userName);
-                this._currentTerminal = new Terminal(Common.Functions.GetMachineName());
-                this._currentPrinter = _currentUser.DefaultPrinter;
-                this._currentFeeEarner = _currentUser.WorksFor;
-                this._currentFavourites = new Favourites(_currentUser.ID);
+                _currentUser = User.GetUser(loginType, userName);
+                _currentTerminal = new Terminal(Common.Functions.GetMachineName());
+                _currentPrinter = _currentUser.DefaultPrinter;
+                _currentFeeEarner = _currentUser.WorksFor;
+                _currentFavourites = new Favourites(_currentUser.ID);
             }
 
             if (_currentFeeEarner != null)
@@ -4517,7 +4520,7 @@ from dbcommandbarcontrol", "CONTROLS", pars.ToArray());
             if (dt.Rows.Count > 0)
                 return Convert.ToInt32(dt.Rows[0]["ctryid"]);
             else
-                return DefaultCountry;
+                return Address.CountryID;
         }
 
         /// <summary>
@@ -4534,7 +4537,7 @@ from dbcommandbarcontrol", "CONTROLS", pars.ToArray());
             if (dt.Rows.Count > 0)
                 return Convert.ToInt32(dt.Rows[0]["ctryid"]);
             else
-                return DefaultCountry;
+                return Address.CountryID;
         }
 
 
@@ -4973,7 +4976,8 @@ from dbcommandbarcontrol", "CONTROLS", pars.ToArray());
         private Assembly ResolveAssembly(object sender, ResolveEventArgs args)
         {
             string assemblyName = args.Name;
-            if (assemblyName.StartsWith("Microsoft.Web.WebView2") && !assemblyName.Contains(".resources"))
+            if (assemblyName.StartsWith("Newtonsoft.Json") ||
+                (assemblyName.StartsWith("Microsoft.Web.WebView2") && !assemblyName.Contains(".resources")))
             {
                 string filename = $"{assemblyName.Split(',')[0]}.dll";
                 try
@@ -5583,22 +5587,6 @@ from dbcommandbarcontrol", "CONTROLS", pars.ToArray());
                     _joblist = new PrecedentJobList();
                 return _joblist;
             }
-        }
-
-        /// <summary>
-        /// Gets the default country identifier.
-        /// </summary>
-        [EnquiryUsage(false)]
-        [Browsable(false)]
-        [Obsolete("Use Address.CountryID instead.")]
-        public int DefaultCountry
-        {
-            get
-            {
-                CheckLoggedIn();
-                return Address.CountryID;
-            }
-
         }
 
 
@@ -6229,22 +6217,6 @@ from dbcommandbarcontrol", "CONTROLS", pars.ToArray());
             }
         }
 
-
-        [EnquiryUsage(false)]
-        [Browsable(false)]
-        [Obsolete("Track change options no longer controlled by 3E MatterSphere", false)]
-        [LocCategory("OMS")]
-        public bool EnableTrackChanges
-        {
-            get
-            {
-                return ConvertDef.ToBoolean(GetXmlProperty("regEnableTrackChanges", "true"), true);
-            }
-            set
-            {
-                SetXmlProperty("regEnableTrackChanges", value);
-            }
-        }
 
         [EnquiryUsage(true)]
         [LocCategory("OMS")]
@@ -7857,7 +7829,7 @@ from dbcommandbarcontrol", "CONTROLS", pars.ToArray());
                     return false;
                 }
 
-                if (Encryption.NewKeyDecrypt(databaseSettings.ApplicationRoleName).ToUpper() == "OMSAPPLICATIONROLE")
+                if (FWBS.Common.Security.Cryptography.Encryption.NewKeyDecrypt(databaseSettings.ApplicationRoleName).ToUpper() == "OMSAPPLICATIONROLE")
                 {
                     return true;
                 }

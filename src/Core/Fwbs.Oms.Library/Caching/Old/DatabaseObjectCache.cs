@@ -1,8 +1,5 @@
-using System;
-
 namespace FWBS.OMS.Caching
 {
-    [Obsolete("Use the one in Queries")]
     internal sealed class DatabaseObjectCache : BaseQueryCache
     {
         #region IQueryCache Members
@@ -26,9 +23,5 @@ namespace FWBS.OMS.Caching
         }
 
         #endregion
-
-
     }
-
-   
 }

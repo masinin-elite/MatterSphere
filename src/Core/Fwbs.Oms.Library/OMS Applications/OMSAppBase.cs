@@ -1318,12 +1318,6 @@ namespace FWBS.OMS.Interfaces
             file.RemoveProperty(globalname);
         }
 
-        [Obsolete("Please use AttachDocumentProperties")]
-        public static void AttachDocumentVars(System.IO.FileInfo file, Document doc, DocumentVersion version)
-        {
-            AttachDocumentProperties(file, doc, version);
-        }
-
         public static void AttachDocumentProperties(System.IO.FileInfo file, Document doc, DocumentVersion version)
         {
             Associate assoc = doc.Associate;

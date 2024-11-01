@@ -33,20 +33,6 @@ namespace FWBS.OMS.DocumentManagement.Storage
         private readonly object tag;
         private readonly System.IO.FileInfo file;
 
-        [Obsolete("Please use the constructor with the basedon parameter")]
-        public NewVersionEventArgs(IStorageItemVersion version, System.IO.FileInfo file, object tag)
-        {
-            if (file == null)
-                throw new ArgumentNullException("file");
-            if (version == null)
-                throw new ArgumentNullException("version");
-
-            this.basedOn = null;
-            this.file = file;
-            this.version = version;
-            this.tag = tag;
-        }
-
         public NewVersionEventArgs(IStorageItemVersion basedOn, IStorageItemVersion version, System.IO.FileInfo file, object tag)
         {
             if (file == null)

@@ -1251,7 +1251,7 @@ namespace FWBS.OMS.UI.Windows
 
         private void PopulateAppStats()
         {
-            Session _session = Session.OMS;
+            Session _session = Session.CurrentSession;
 
             this.Text = FWBS.OMS.Global.ApplicationName;
             AssemblyCopyrightAttribute cpy = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyCopyrightAttribute));

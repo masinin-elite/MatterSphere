@@ -142,7 +142,6 @@
     <Compile Include="Elasticsearch\ResponseItem.cs" />
     <Compile Include="Elasticsearch\SearchFilter.cs" />
     <Compile Include="Elasticsearch\SearchResult.cs" />
-    <Compile Include="Encryption.cs" />
     <Compile Include="Exception.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Interfaces.cs" />

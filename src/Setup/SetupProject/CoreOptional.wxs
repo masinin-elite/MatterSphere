@@ -7,17 +7,14 @@
 
   <Fragment>
     <ComponentGroup Id="CG_Actipro" Directory="INSTALLDIR">
-      <Component Id="cmpF27D8FAEFCCEE784ED8091A118F415E1" Guid="{04AA7CD6-FECB-41BE-8ACF-67289EEA001A}">
-        <File Id="ActiproSoftware.Shared.Net20.dll" KeyPath="yes" Source="$(var.SourceDir)\ActiproSoftware.Shared.Net20.dll" />
+      <Component Id="cmp754E2B7C04134C52868611B97531BADE" Guid="{E55CF0E2-5DD9-48E6-9E4E-FFA24549008D}">
+        <File Id="ActiproSoftware.Shared.WinForms.dll" KeyPath="yes" Source="$(var.SourceDir)\ActiproSoftware.Shared.WinForms.dll" />
       </Component>
-      <Component Id="cmp3EE8F276847273995972373DF8F630F4" Guid="{501CC220-D51D-4D51-8464-43D5915BEF4A}">
-        <File Id="ActiproSoftware.SyntaxEditor.Addons.DotNet.Net20.dll" KeyPath="yes" Source="$(var.SourceDir)\ActiproSoftware.SyntaxEditor.Addons.DotNet.Net20.dll" />
+      <Component Id="cmp592131BACA2247F8970497BD769C2080" Guid="{77F338AF-1B34-4F29-8ABA-67BC73AD1671}">
+        <File Id="ActiproSoftware.SyntaxEditor.Addons.DotNet.WinForms.dll" KeyPath="yes" Source="$(var.SourceDir)\ActiproSoftware.SyntaxEditor.Addons.DotNet.WinForms.dll" />
       </Component>
-      <Component Id="cmp8ED7EC43AA2CD0839CB47CE1CAEF6ADC" Guid="{2DC42605-550F-485D-8D01-7C0911EECF81}">
-        <File Id="ActiproSoftware.SyntaxEditor.Net20.dll" KeyPath="yes" Source="$(var.SourceDir)\ActiproSoftware.SyntaxEditor.Net20.dll" />
-      </Component>
-      <Component Id="cmp2D60173C18EDC1C63EDD3FF8CC83808F" Guid="{6A24B605-261D-4A10-9516-E7135F4E8BB0}">
-        <File Id="ActiproSoftware.WinUICore.Net20.dll" KeyPath="yes" Source="$(var.SourceDir)\ActiproSoftware.WinUICore.Net20.dll" />
+      <Component Id="cmp65165EFF05D1449CA6E6EEA484E88021" Guid="{B32883F0-9584-44CB-9CDF-270EC3DFCB04}">
+        <File Id="ActiproSoftware.SyntaxEditor.WinForms.dll" KeyPath="yes" Source="$(var.SourceDir)\ActiproSoftware.SyntaxEditor.WinForms.dll" />
       </Component>
     </ComponentGroup>
 

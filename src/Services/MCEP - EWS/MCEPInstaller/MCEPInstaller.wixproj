@@ -11,18 +11,14 @@
     <PackageReference Include="WixToolset.UI.wixext" Version="4.0.5" />
   </ItemGroup>
   <ItemGroup>
-    <HarvestProject Include="..\MCEPControlForm\MCEPControlForm.csproj" ProjectOutputGroups="Binaries;Content;" HarvestProjectsVerboseOutput="true" />
-    <HarvestProject Include="..\MCEPGlobalClasses\MCEPGlobalClasses.csproj" ProjectOutputGroups="Binaries;Content;" HarvestProjectsVerboseOutput="true" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Directory.Build.props" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MCEPMerge\MCEPMerge.csproj" />
     <ProjectReference Include="..\MCEPProfilerEWS\MCEPProfilerEWS.csproj" />
     <ProjectReference Include="..\MCEPStorerEWS\MCEPStorerEWS.csproj" />
-    <ProjectReference Include="..\MCEPControlForm\MCEPControlForm.csproj" DoNotHarvest="true" />
-    <ProjectReference Include="..\MCEPGlobalClasses\MCEPGlobalClasses.csproj" DoNotHarvest="true" />
+    <ProjectReference Include="..\MCEPControlForm\MCEPControlForm.csproj" />
+    <ProjectReference Include="..\MCEPGlobalClasses\MCEPGlobalClasses.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <OutputName>$(OutputName)</OutputName>

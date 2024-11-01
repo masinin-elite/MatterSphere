@@ -6,7 +6,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Xml;
@@ -18,8 +17,6 @@ using FWBS.OMS.SourceEngine;
 
 namespace FWBS.OMS.EnquiryEngine
 {
-
-
     /// <summary>
     /// An object that retrieves a data set schema from the database and sets it up to be used 
     /// to render a dynamic form to the screen.  This engine allows dynamic data retrieval 
@@ -331,7 +328,7 @@ namespace FWBS.OMS.EnquiryEngine
 			_obj = null;
             _props = null;
 
-			_session = Session.OMS;
+			_session = Session.CurrentSession;
 			
 			//Fetch the enquiry schema.
 			GetEnquiryData();  
@@ -389,7 +386,7 @@ namespace FWBS.OMS.EnquiryEngine
 			_obj = obj;
             _props = new EnquiryPropertyCollection(_obj, true);
 			_offline = offline;
-			_session = Session.OMS;
+			_session = Session.CurrentSession;
 			_designMode = false;
 
 			//If the overriding parent is null then set the passed objects parent.
@@ -424,7 +421,7 @@ namespace FWBS.OMS.EnquiryEngine
 			_obj = null;
             _props = null;
 			_offline = offline;
-			_session = Session.OMS;
+			_session = Session.CurrentSession;
 			_designMode = false;
 
 			
@@ -458,7 +455,7 @@ namespace FWBS.OMS.EnquiryEngine
 			_obj = null;
             _props = null;
 			_offline = offline;
-			_session = Session.OMS;
+			_session = Session.CurrentSession;
 
 			
 			//Set the parameter list.
@@ -3045,16 +3042,23 @@ namespace FWBS.OMS.EnquiryEngine
 		{
 			try
 			{
-				Enquiry enq = Enquiry.GetEnquiry(EnquiryForm,Session.OMS,EnquiryEngine.EnquiryMode.Search,true,new KeyValueCollection());
+				Enquiry enq = GetEnquiry(
+					EnquiryForm,
+					Session.CurrentSession,
+					EnquiryMode.Search,
+					true,
+					new KeyValueCollection());
+
 				long v = enq.Version;
+
 				enq.Dispose();
+
 				return v;
 			}
 			catch
 			{
 				return -1;
 			}
-
 		}
 
 		/// <summary>

@@ -2964,6 +2964,9 @@ namespace FWBS.OMS
 					{
 						ext.UpdateExtendedData();
 					}
+					SetExtraInfo("UpdatedBy", Session.CurrentSession.CurrentUser.ID);
+					SetExtraInfo("Updated", DateTime.Now);
+					Session.CurrentSession.Connection.Update(row, "dbContact");
 				}
 
 				//Update any of the cached objects that may have something to do with this contact.

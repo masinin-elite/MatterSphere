@@ -189,7 +189,7 @@ namespace FWBS.OMS.UI.Windows.Design
 
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
-            FWBS.OMS.RegisteredApplication _input = value as FWBS.OMS.RegisteredApplication;
+            var _input = value as FWBS.OMS.Apps.RegisteredApplication;
 
             iWFES = provider.GetService(typeof(IWindowsFormsEditorService)) as IWindowsFormsEditorService;
             frmListSelector frmListSelector1 = new frmListSelector();
@@ -206,7 +206,7 @@ namespace FWBS.OMS.UI.Windows.Design
             iWFES.ShowDialog(frmListSelector1);
             if (frmListSelector1.DialogResult == DialogResult.OK)
             {
-                FWBS.OMS.RegisteredApplication output = FWBS.OMS.RegisteredApplication.GetApplication(Convert.ToInt16(frmListSelector1.List.SelectedValue));
+                var output = FWBS.OMS.Apps.ApplicationManager.CurrentManager.GetRegisteredApplication(Convert.ToInt16(frmListSelector1.List.SelectedValue));
                 value = output;
             }
             return value;

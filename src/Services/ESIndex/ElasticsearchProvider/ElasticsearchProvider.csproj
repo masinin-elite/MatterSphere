@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.7.5\lib\net45\NLog.dll</HintPath>
@@ -54,10 +54,10 @@
     <Compile Include="Provider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\ServicesAssemblyInfo.cs">
-        <Link>Properties\ServicesAssemblyInfo.cs</Link>
+      <Link>Properties\ServicesAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\MSProductInfo.cs">
-        <Link>Properties\MSProductInfo.cs</Link>
+      <Link>Properties\MSProductInfo.cs</Link>
     </Compile>
     <Compile Include="SuggestionsFactory.cs" />
   </ItemGroup>

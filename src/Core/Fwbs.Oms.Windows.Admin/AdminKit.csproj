@@ -178,7 +178,6 @@
     <None Include="..\..\MatterSphereKey.snk">
       <Link>MatterSphereKey.snk</Link>
     </None>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\System Update Backdrop.png" />
     <None Include="Resources\Parent.png" />
     <None Include="Resources\Forward.png" />

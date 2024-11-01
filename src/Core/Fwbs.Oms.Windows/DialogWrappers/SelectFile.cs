@@ -51,7 +51,7 @@ namespace FWBS.OMS.UI
         private OMSFile ShowOverride(IWin32Window owner)
         {
             Enquiry e = Enquiry.GetEnquiry(Session.CurrentSession.SelectFileEnquiryOverride, null, EnquiryMode.Add, new FWBS.Common.KeyValueCollection());
-            Services.Screens n = new Services.Screens(e);
+            Screen n = new Screen(e);
             OMSFile file = n.Show(owner) as OMSFile;
             return file;
         }

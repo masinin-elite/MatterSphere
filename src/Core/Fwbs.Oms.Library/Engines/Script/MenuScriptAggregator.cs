@@ -120,45 +120,6 @@ namespace FWBS.OMS.Script
             return false;
         }
 
-        [Obsolete("Please use the Constructor to specify the omsapp and use Invoke.")]
-        public bool Execute(object application, FWBS.OMS.Interfaces.IOMSApp omsApp, string command)
-        {
-            if (!Session.CurrentSession.IsLoggedIn)
-                return false;
-
-            if (menuScripts == null || menuScripts.Count <= 0)
-                return false;
-
-            foreach (MenuScriptType menuScript in menuScripts)
-            {
-                if (menuScript == null)
-                    continue;
-
-                menuScript.SetAppObject(application, omsApp);
-
-
-                try
-                {
-
-                    MethodInfo info = menuScript.GetType().GetMethod(command, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                    if (info != null)
-                    {
-                        info.Invoke(menuScript, null);
-                        return true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (ex.InnerException != null)
-                        throw ex.InnerException;
-                    else
-                        throw;
-                }
-            }
-
-            return false;
-        }
-
         public bool Execute(object doc, string command)
         {
             if (!Session.CurrentSession.IsLoggedIn)

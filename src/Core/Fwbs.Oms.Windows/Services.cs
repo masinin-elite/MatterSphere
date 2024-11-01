@@ -400,7 +400,7 @@ namespace FWBS.OMS.UI.Windows
 
         private static void ShowEnquiry(object sender, ShowEnquiryEventArgs e)
         {
-            Screens scr = new Screens(e.Enquiry);
+            Screen scr = new Screen(e.Enquiry);
             object ret = scr.Show();
             e.ReturnObject = ret;
             if (ret == null)
@@ -460,7 +460,7 @@ namespace FWBS.OMS.UI.Windows
                 {
                     Login();
                 }
-                return Session.OMS;
+                return Session.CurrentSession;
             }
         }
 
@@ -870,7 +870,7 @@ namespace FWBS.OMS.UI.Windows
                     FWBS.Common.KeyValueCollection x = new FWBS.Common.KeyValueCollection();
                     x.Add("Private", AllowPrivateAssociate);
                     Enquiry e = Enquiry.GetEnquiry(Session.CurrentSession.SelectFileEnquiryOverride, null, EnquiryMode.Add, x);
-                    Screens n = new Screens(e);
+                    Screen n = new Screen(e);
                     object obj = n.Show();
                     OMSFile file = obj as OMSFile;
                     Associate ass = obj as Associate;
@@ -2409,29 +2409,6 @@ namespace FWBS.OMS.UI.Windows
 
 
         #endregion
-
-        #region IOMSApp Methods
-
-        /// <summary>
-        /// Gets a reference to the current OMS apps created within the windows session.
-        /// </summary>
-        [Obsolete("Use Apps.ApplicationManager.CurrentManager.InitialiseInstance instead")]
-        static public void RegisterOMSApp(string type, FWBS.OMS.Interfaces.IOMSApp controlApp)
-        {
-            Apps.ApplicationManager.CurrentManager.InitialiseInstance(type, controlApp);
-        }
-
-        /// <summary>
-        /// Gets a reference to the current OMS apps created within the windows session.
-        /// </summary>
-        [Obsolete("Use Apps.ApplicationManager.CurrentManager.GetApplicationInstance instead.")]
-        static public FWBS.OMS.Interfaces.IOMSApp FetchOMSApp(RegisteredApplication app, bool create)
-        {
-            return Apps.ApplicationManager.CurrentManager.GetApplicationInstance(app.AppCode, create);
-        }
-
-        #endregion
-
 
         private static void OnProgress(object sender, FWBS.Common.ProgressEventArgs e)
         {

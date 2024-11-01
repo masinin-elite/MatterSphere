@@ -32,12 +32,6 @@ namespace FWBS.OMS.DocumentManagement.Storage
 
         #region Properties
 
-        [Obsolete("Please use the LocalDocuments property")]
-        public static System.Data.DataTable GetLocalDocuments()
-        {
-            return CurrentManager.LocalDocuments.GetLocalDocumentInfo();
-        }
-
         public static System.Data.DataTable GetLocalDocuments(bool checkedOut, bool changed, object documentType)
         {
             
@@ -74,12 +68,6 @@ namespace FWBS.OMS.DocumentManagement.Storage
             return localView.ToTable();
         }
 
-
-        [Obsolete("Please use the LocalDocuments property")]
-        public static System.Data.DataTable GetLocalPrecedents()
-        {
-            return CurrentManager.LocalDocuments.GetLocalPrecedentInfo();
-        }
 
         public static StorageManager CurrentManager
         {

@@ -352,8 +352,7 @@ namespace FWBS.OMS
         public Guid FolderGUID { get; set; }
 
         public string To { get; set; }
-        [Obsolete("Not Currently Stored To the Database")]
-        public string From { get; set; }
+        
         public string CC { get; set; }
         public string BCC { get; set; }
 

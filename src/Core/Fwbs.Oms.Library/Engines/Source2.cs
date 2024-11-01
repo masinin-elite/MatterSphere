@@ -461,64 +461,35 @@ namespace FWBS.OMS.SourceEngine
                 ctr++;
             }
 
-
-            //Check to see if the calling SQL statement is a SELECT statement or a stored procedure.
-
-
             if (_call.Length == 0)
                 throw new Exception("You must complete the data builder");
 
-            ConnectionExecuteParameters pars = new ConnectionExecuteParameters();
+            var executeParameters = returnDataSet
+                ? (ExecuteParameters)new DataSetExecuteParameters { Tables = new[] { "SOURCE" } }
+                : new DataTableExecuteParameters { Table = "SOURCE" };
 
-            pars.Parameters = paramlist;
-            pars.ShemaOnly = schemaOnly;
-            pars.TableNames = new string[1] { "SOURCE" };
-            pars.Sql = _call;
-            pars.LocalDateColumns = LocalDateColumns;
-            pars.LocalDateParameters = localDateParameters.ToArray();
+            executeParameters.CommandType = CommandType.Text;
+            executeParameters.Sql = _call;
+            executeParameters.SchemaOnly = schemaOnly;
+            executeParameters.Parameters.AddRange(paramlist);
+            executeParameters.CommandType = _call.ToUpper().StartsWith("SELECT") ? CommandType.Text : CommandType.StoredProcedure;
 
-            if (returnDataSet)
+            foreach (var item in LocalDateColumns)
             {
-                if (_call.ToUpper().StartsWith("SELECT"))
-                {
-                    pars.CommandType = CommandType.Text;
-                    retVal = cnn.ExecuteSQLDataSet(pars);
-                }
-                else
-                {
-                    pars.CommandType = CommandType.StoredProcedure;
-                    retVal = cnn.ExecuteSQLDataSet(pars);
-                }
+                executeParameters.DateTimeColumns[item] = new DateTimeItem { Kind = DateTimeKind.Local };
             }
-            else
+
+            foreach (var item in localDateParameters)
             {
-                if (_call.ToUpper().StartsWith("SELECT"))
-                {
-                    pars.CommandType = CommandType.Text;
-                    retVal = cnn.ExecuteSQLTable(pars);
-                }
-                else
-                {
-                    pars.CommandType = CommandType.StoredProcedure;
-                    retVal = cnn.ExecuteSQLTable(pars);
-                }
+                executeParameters.DateTimeParameters[item] = new DateTimeItem { Kind = DateTimeKind.Local };
             }
+
+            retVal = returnDataSet
+                ? cnn.Execute((DataSetExecuteParameters)executeParameters)
+                : (object)cnn.Execute((DataTableExecuteParameters)executeParameters);
 
             return retVal;
         }
-
-        /// <summary>
-        /// Test Method - DO NOT USE
-        /// </summary>
-        /// <param name="sourceIs">The date parameter type</param>
-        /// <param name="val">The date to transform</param>
-        /// <returns>Val transformed to the sourceIs type</returns>
-        [Obsolete("Test Method - DO NOT USE")]
-        public static DateTime TransformDateParameter(FWBS.OMS.SearchEngine.SearchParameterDateIs sourceIs, DateTime val)
-        {
-            return TransformDateParameter(Convert.ToString(sourceIs), val);
-        }
-
         internal static DateTime TransformDateParameter(string sourceIs, DateTime val)
         {
             DateTime date = (DateTime)val;

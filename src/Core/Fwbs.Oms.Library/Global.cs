@@ -376,7 +376,7 @@ namespace FWBS.OMS
 				ret = "#" + resID + "# Not in Resource File";
 				Trace.WriteLineIf(Global.LogSwitch.TraceWarning,ret,"RESOURCE");
 			}
-			if (Session.OMS != null && ret != null && useParser && Session.CurrentSession.IsLoggedIn)
+			if (Session.CurrentSession != null && ret != null && useParser && Session.CurrentSession.IsLoggedIn)
 			{
 				ret = Session.CurrentSession.Terminology.Parse(ret,true);
 			}

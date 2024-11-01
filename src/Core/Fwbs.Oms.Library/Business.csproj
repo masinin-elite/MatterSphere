@@ -173,7 +173,6 @@
     <Compile Include="..\CoreAssemblyInfo.cs">
       <Link>Properties\CoreAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Caching\Old\SchemaQueryCache.cs" />
     <Compile Include="Caching\Queries\CodeLookupLocalQueryCache.cs" />
     <Compile Include="Caching\Queries\AssemblyQueryCache.cs" />
     <Compile Include="Caching\DataSetLocalQueryCache.cs" />
@@ -274,13 +273,12 @@
     <Compile Include="Branding.cs" />
     <Compile Include="Caching\Old\BaseQueryCache.cs" />
     <Compile Include="Caching\CachedItemList.cs" />
-    <Compile Include="Caching\Old\CodeLookupQueryCache.cs" />
     <Compile Include="Caching\Old\AddressFormatQueryCache.cs" />
     <Compile Include="Caching\DictionaryCache.cs" />
     <Compile Include="Caching\QueryCacheCollection.cs" />
     <Compile Include="Caching\Old\DatabaseObjectCache.cs" />
     <Compile Include="Caching\ICacheable.cs" />
-    <Compile Include="Caching\Queries\SchemaQueryCache.cs" />
+    <Compile Include="Caching\Queries\SchemaQueryLocalCache.cs" />
     <Compile Include="Caching\Old\DataTableCache.cs" />
     <Compile Include="Caching\IQueryCache.cs" />
     <Compile Include="Commands\Command.cs" />
@@ -334,7 +332,6 @@
     <Compile Include="DocumentManagement\Storage\Settings\StorageSettingsEditorAttribute.cs" />
     <Compile Include="DocumentManagement\Storage\StoreResults.cs" />
     <Compile Include="DocumentManagement\Storage\Exceptions\StorageLocationProviderItemNotInstalledException.cs" />
-    <Compile Include="DocumentManagement\Storage\Exceptions\StoreItemNotInStorageLocationException.cs" />
     <Compile Include="DocumentManagement\Storage\IStorageItemLockable.cs" />
     <Compile Include="DocumentManagement\Storage\Settings\VersionFetchSettings.cs" />
     <Compile Include="DocumentManagement\Storage\Settings\VersionStoreSettings.cs" />
@@ -366,7 +363,6 @@
     <Compile Include="OMS Applications\IOMSAppAddin.cs" />
     <Compile Include="OMS Applications\RegisteredApplication.cs" />
     <Compile Include="OMS Applications\RegisteredApplicationException.cs" />
-    <Compile Include="OMS Applications\RegisteredApplicationOld.cs" />
     <Compile Include="Entity Objects\Team.cs" />
     <Compile Include="OMS Applications\ApplicationManager.cs" />
     <Compile Include="OMS Applications\ISecondStageMergeOMSApp.cs" />
@@ -597,9 +593,6 @@
     <Compile Include="Engines\DistributedAssemblies\DistributedAssemblies.cs" />
     <Compile Include="Engines\DistributedAssemblies\DistributedAssemblyListItem.cs" />
     <Compile Include="Engines\DistributedAssemblies\DistributedAssemblyManager.cs" />
-    <Compile Include="System Objects\Export.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="System Objects\Favourites.cs">
       <SubType>Code</SubType>
     </Compile>

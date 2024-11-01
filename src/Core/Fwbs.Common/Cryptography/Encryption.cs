@@ -10,7 +10,7 @@ namespace FWBS.Common.Security.Cryptography
 		private Encryption() {}
 		
 
-		static public string  Decrypt (string inString)
+		static public string Decrypt(string inString)
 		{	
 			string ret = "";
 			try
@@ -29,7 +29,7 @@ namespace FWBS.Common.Security.Cryptography
 		}
 		
 
-		static public string Encrypt (string inString)
+		static public string Encrypt(string inString)
 		{
 			string ret = "";
 			try

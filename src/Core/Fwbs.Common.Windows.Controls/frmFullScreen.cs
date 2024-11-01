@@ -6,23 +6,12 @@ namespace FWBS.Common.UI.Windows
 {
     public partial class frmFullScreen : Form
     {
-        
-        
         public frmFullScreen()
         {
             InitializeComponent();
         }
 
         #region Properties
-        [Obsolete("Use the Display Image method to display an image")]
-        public PictureBox Picture
-        {
-            get
-            {
-                return pictureBox1;
-            }
-        }
-
         /// <summary>
         /// Set the Image to be Displayed
         /// </summary>
@@ -30,9 +19,6 @@ namespace FWBS.Common.UI.Windows
         public void DisplayImage(Image image)
         {
             pictureBox1.Image = image;
-
-            
-
         }
         #endregion
 
@@ -106,7 +92,6 @@ namespace FWBS.Common.UI.Windows
 
             fittowindow = !fittowindow;
         }
-       
 
         private void Print()
         {

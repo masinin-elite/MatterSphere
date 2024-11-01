@@ -822,43 +822,6 @@ namespace FWBS.OMS.UI.Windows
             }
 
             /// <summary>
-            /// Displays the fee earner search screen.
-            /// </summary>
-            /// <returns>An OMS User object.</returns>
-            [Obsolete("No longer supported in 3E MatterSphere")]
-            public static FeeEarner FindFeeEarner(IWin32Window owner)
-            {
-                FWBS.Common.KeyValueCollection ret = ShowSearch(owner, Session.CurrentSession.DefaultSystemSearchListGroups(FWBS.OMS.SystemSearchListGroups.FeeEarner), null, null);
-                if (ret == null || ret.Count == 0)
-                    return null;
-
-                int feeid = 0;
-                try
-                {
-                    feeid = Convert.ToInt32(ret["FEEUSRID"].Value);
-                }
-                catch
-                {
-                    return null;
-                }
-                try
-                {
-                    return FeeEarner.GetFeeEarner(feeid);
-                }
-                catch (Exception ex)
-                {
-                    ErrorBox.Show(owner, ex);
-                    return null;
-                }
-            }
-
-            [Obsolete("No longer supported in 3E MatterSphere")]
-            public static FeeEarner FindFeeEarner()
-            {
-                return FindFeeEarner(null);
-            }
-
-            /// <summary>
             /// Displays the document search screen based on a file identifier filter.
             /// </summary>
             /// <param name="fileID">The file to base the search on.</param>
